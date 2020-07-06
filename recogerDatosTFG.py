@@ -16,7 +16,7 @@ print("Leyendo datos")
 def guardarDatos(datos):
     jsonData = json.loads(datos)
     try:
-        peticion = req.post('http://localhost:8080/v1/insert', json=jsonData)
+        req.post('http://localhost:8080/v1/insert', json=jsonData)
         
     except req.exceptions.Timeout:
         print("Maybe set up for a retry, or continue in a retry loop")
