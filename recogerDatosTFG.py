@@ -3,7 +3,9 @@ import os
 import time as t
 import requests as req
 import json
-import re
+from getmac import get_mac_address as gma
+
+userID = gma()
 
 comandos = {"posix": {'puertoSerie' : '/dev/ttyUSB0'},
             "nt": {'puertoSerie' : 'COM3'}}
@@ -15,6 +17,9 @@ print("Leyendo datos")
 
 def guardarDatos(datos):
     jsonData = json.loads(datos)
+
+    jsonData['UserID'] = userID
+
     try:
         req.post('http://localhost:8080/v1/insert', json=jsonData)
         
