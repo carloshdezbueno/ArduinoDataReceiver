@@ -15,13 +15,23 @@ print("Leyendo datos")
 
 def guardarDatos(datos):
     jsonData = json.loads(datos)
-    peticion = req.post('http://localhost:8080/v1/insert', json=jsonData)
+    try:
+        peticion = req.post('http://localhost:8080/v1/insert', json=jsonData)
+        
+    except req.exceptions.Timeout:
+        print("Maybe set up for a retry, or continue in a retry loop")
+    except req.exceptions.TooManyRedirects:
+        print("Tell the user their URL was bad and try a different one")
+    except req.exceptions.RequestException as e:
+        print(e.args)
+    
+    
     
     
 def validateJSON(jsonData):
     try:
         json.loads(jsonData)
-    except ValueError as err:
+    except ValueError:
         return False
     return True
 
