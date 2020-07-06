@@ -3,6 +3,7 @@ import os
 import time as t
 import requests as req
 import json
+import re
 
 comandos = {"posix": {'puertoSerie' : '/dev/ttyUSB0'},
             "nt": {'puertoSerie' : 'COM3'}}
@@ -15,12 +16,20 @@ print("Leyendo datos")
 def guardarDatos(datos):
     jsonData = json.loads(datos)
     peticion = req.post('http://localhost:8080/v1/insert', json=jsonData)
-    print(peticion.status_code)
     
+    
+def validateJSON(jsonData):
+    try:
+        json.loads(jsonData)
+    except ValueError as err:
+        return False
+    return True
 
 while True:
     
     datos = arduino.readline()
-    guardarDatos(datos.decode("utf-8") )
+
+    if validateJSON(datos):
+        guardarDatos(datos.decode("utf-8"))
 
     t.sleep(30)
