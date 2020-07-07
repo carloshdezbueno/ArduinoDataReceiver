@@ -1,27 +1,13 @@
-import serial
-import os
 import time as t
+
 import requests as req
-import json
-from getmac import get_mac_address as gma
 
-userID = gma()
+print("Enviando peticiones")
 
-comandos = {"posix": {'puertoSerie' : '/dev/ttyUSB0'},
-            "nt": {'puertoSerie' : 'COM3'}}
-
-arduino = serial.Serial(comandos[os.name]["puertoSerie"], 9600)
-
-
-print("Leyendo datos")
-
-def guardarDatos(datos):
-    jsonData = json.loads(datos)
-
-    jsonData['UserID'] = userID
-
+def enviarPeticion():
+    
     try:
-        req.post('http://localhost:8080/v1/insert', json=jsonData)
+        req.post('http://localhost:8080/v1/insert')
         
     except req.exceptions.Timeout:
         print("Maybe set up for a retry, or continue in a retry loop")
@@ -29,22 +15,9 @@ def guardarDatos(datos):
         print("Tell the user their URL was bad and try a different one")
     except req.exceptions.RequestException as e:
         print(e.args)
-    
-    
-    
-    
-def validateJSON(jsonData):
-    try:
-        json.loads(jsonData)
-    except ValueError:
-        return False
-    return True
 
 while True:
-    
-    datos = arduino.readline()
 
-    if validateJSON(datos):
-        guardarDatos(datos.decode("utf-8"))
+    enviarPeticion()
 
     t.sleep(30)
