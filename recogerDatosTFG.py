@@ -1,13 +1,14 @@
 import time as t
 
 import requests as req
+import datetime as dt
 
 print("Enviando peticiones")
 
 def enviarPeticion():
     
     try:
-        req.post('http://localhost:8080/v1/insert')
+        req.post('http://localhost:8080/v1/grabData')
         
     except req.exceptions.Timeout:
         print("Maybe set up for a retry, or continue in a retry loop")
@@ -20,4 +21,5 @@ while True:
 
     enviarPeticion()
 
-    t.sleep(30)
+    #Se ejecuta cada 10 minutos
+    t.sleep(120)
